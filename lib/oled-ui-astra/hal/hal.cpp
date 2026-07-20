@@ -20,8 +20,8 @@ bool HAL::inject(HAL *_hal) {
     return false;
   }
 
-  _hal->init();
   hal = _hal;
+  _hal->init();
   return true;
 }
 
