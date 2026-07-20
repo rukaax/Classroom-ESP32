@@ -28,9 +28,9 @@
 #define OLED_SCL  18        // OLED I2C时钟线
 #define OLED_ADDR 0x3C      // OLED I2C设备地址（SSD1306默认地址）
 
-#define ENCODER_CLK 6       // 旋转编码器时钟引脚（A相）
-#define ENCODER_DT  4       // 旋转编码器数据引脚（B相）
-#define ENCODER_SW  5       // 旋转编码器按钮引脚（按下接地）
+#define ENCODER_CLK 4       // 旋转编码器时钟引脚（A相）
+#define ENCODER_DT  5       // 旋转编码器数据引脚（B相）
+#define ENCODER_SW  6       // 旋转编码器按钮引脚（按下接地）
 
 #define PIN_LIGHT   7       // 光敏电阻ADC引脚（与sensors.h保持一致）
 #define PIN_MQ135   15      // MQ135 ADC引脚（与sensors.h保持一致）
@@ -116,6 +116,7 @@ public:
   //   长按 -> PRESS（用于进入/返回子菜单）
 
   bool _getKey(key::KEY_INDEX _keyIndex) override;  // 检查指定键是否被按下
+  bool _getAnyKey() override;                        // 检查是否有任何按键事件
   void _keyScan() override;                          // 按键扫描（带消抖状态机）
 
   // ==================== 编码器辅助方法 ====================
@@ -124,6 +125,8 @@ public:
    * @note 读取后会自动清零
    */
   int getEncoderDelta();
+  uint32_t getISRCount();
+  int getEncoderPos();
 
   /**
    * @brief 检查编码器按钮是否被按下

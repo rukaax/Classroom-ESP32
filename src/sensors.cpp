@@ -30,10 +30,10 @@ SensorManager::SensorManager(unsigned long interval)
  *   3. MQ135引脚配置为输入模式（ADC读取）
  */
 void SensorManager::begin() {
-  dht.begin();                    // 启动DHT11传感器
+  // dht.begin();  // DHT11未接时会阻塞，确认接好后再启用
   pinMode(PIN_LIGHT, INPUT);      // 光敏电阻引脚设为输入
   pinMode(PIN_MQ135, INPUT);      // MQ135引脚设为输入
-  Serial.println("[Sensors] 传感器初始化完成。");
+  Serial.println("[Sensors] Sensors initialized.");
 }
 
 // ==================== 数据更新 ====================
@@ -70,11 +70,12 @@ void SensorManager::update() {
   data.mq135Value = rawMQ / 4095.0f * 100.0f;
 
   // ---------- 读取DHT11温湿度传感器 ----------
-  // DHT11读取可能失败（返回NaN），失败时保留上次的有效值
-  float t = dht.readTemperature();   // 读取温度（摄氏度）
-  float h = dht.readHumidity();      // 读取相对湿度（%）
-  if (!isnan(t)) data.temperature = t;  // 读取成功则更新温度
-  if (!isnan(h)) data.humidity = h;     // 读取成功则更新湿度
+  // 注意：如果DHT11未接线或无响应，expectPulse()会阻塞导致WDT超时
+  // 确认DHT11已正确接线后，取消下面两行的注释即可启用
+  // float t = dht.readTemperature();
+  // float h = dht.readHumidity();
+  // if (!isnan(t)) data.temperature = t;
+  // if (!isnan(h)) data.humidity = h;
 }
 
 // ==================== 数据获取 ====================
